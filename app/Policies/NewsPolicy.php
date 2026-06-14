@@ -21,7 +21,7 @@ class NewsPolicy
      */
     public function view(User $user, News $news): bool
     {
-        return $news->is_published || ($user && $user->role === 'admin');
+        return $news->is_published || ($user?->role === 'admin');
     }
 
     /**

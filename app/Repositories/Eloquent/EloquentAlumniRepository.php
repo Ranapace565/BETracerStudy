@@ -4,7 +4,6 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\Alumni;
 use App\Contracts\Repositories\AlumniRepositoryInterface;
-use App\Models\Alumnis;
 
 class EloquentAlumniRepository implements AlumniRepositoryInterface
 {

@@ -61,4 +61,20 @@ class QuestionnaireController extends Controller
             'data' => AnswerResource::collection($answers)
         ]);
     }
+
+    public function getStatistics(Request $request): JsonResponse
+    {
+        // Validasi input: admin harus mengirimkan ID pertanyaan yang mau dilihat statistiknya
+        $request->validate([
+            'question_id' => 'required|exists:questions,id'
+        ]);
+
+        $statistics = $this->service->getTracerStatistics($request->question_id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data statistik tracer study berhasil ditarik.',
+            'data' => $statistics
+        ]);
+    }
 }

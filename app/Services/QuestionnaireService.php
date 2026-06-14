@@ -52,4 +52,17 @@ class QuestionnaireService
         $alumni = $this->alumniRepo->findByUserId($userId);
         return $this->answerRepo->getAlumniAnswers($alumni->id, $questionnaireId);
     }
+
+    public function getTracerStatistics(int $mainQuestionId)
+    {
+        $rawStats = $this->answerRepo->getCountByQuestionOption($mainQuestionId);
+        
+        return $rawStats->map(function ($stat) {
+            return [
+                'option_id' => $stat->question_option_id,
+                'label' => $stat->questionOption->option_text ?? 'Isian Teks / Lainnya',
+                'total_alumni' => $stat->total
+            ];
+        });
+    }
 }

@@ -47,7 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::middleware('role:admin')->group(function () {
-        
+        // --- Statistik Tracer Study (Admin Only) ---
+        Route::get('/admin/tracer-statistics', [QuestionnaireController::class, 'getStatistics']);
+
         // Kelola User (CRUD Admin)
         Route::apiResource('users', UserController::class);
 

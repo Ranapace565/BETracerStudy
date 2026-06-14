@@ -38,4 +38,13 @@ class EloquentAnswerRepository implements AnswerRepositoryInterface
                 $q->where('questionnaire_id', $questionnaireId);
             })->get();
     }
+
+    public function getCountByQuestionOption(int $questionId)
+    {
+        return $this->model->where('question_id', $questionId)
+            ->select('question_option_id', \DB::raw('count(*) as total'))
+            ->with(['questionOption:id,option_text'])
+            ->groupBy('question_option_id')
+            ->get();
+    }
 }
