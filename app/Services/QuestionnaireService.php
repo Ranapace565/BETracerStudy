@@ -65,4 +65,41 @@ class QuestionnaireService
             ];
         });
     }
+
+    public function getAllQuestionnaires()
+    {
+        return $this->questionnaireRepo->all();
+    }
+
+    /**
+     * Membuat kuesioner baru.
+     */
+    public function createQuestionnaire(array $data)
+    {
+        return $this->questionnaireRepo->create($data);
+    }
+
+    /**
+     * Mengambil detail kuesioner berdasarkan ID.
+     */
+    public function getQuestionnaireById(int $id)
+    {
+        return $this->questionnaireRepo->find($id);
+    }
+
+    /**
+     * Mengubah data kuesioner.
+     */
+    public function updateQuestionnaire(int $id, array $data)
+    {
+        return $this->questionnaireRepo->update($id, $data);
+    }
+
+    /**
+     * Menghapus kuesioner.
+     */
+    public function deleteQuestionnaire(int $id)
+    {
+        return $this->questionnaireRepo->delete($id);
+    }
 }

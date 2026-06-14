@@ -29,14 +29,27 @@ class UpdateQuestionRequest extends FormRequest
     //     'order' => 'sometimes|integer',
     //     'is_required' => 'sometimes|boolean',
     // ];
-    $questionId = $this->route('question'); // Sesuaikan nama parameter rutenya
 
-    return [
-        'kode' => 'sometimes|string|max:50|unique:questions,kode,' . ($questionId ? (is_object($questionId) ? $questionId->id : $questionId) : 'NULL'),
-        'text' => 'sometimes|string',
-        'type' => 'sometimes|in:text,number,radio,checkbox,dropdown',
-        'order' => 'sometimes|integer',
-        'is_required' => 'sometimes|boolean',
-    ];
+    // $questionId = $this->route('question'); // Sesuaikan nama parameter rutenya
+
+    // return [
+    //     'kode' => 'sometimes|string|max:50|unique:questions,kode,' . ($questionId ? (is_object($questionId) ? $questionId->id : $questionId) : 'NULL'),
+    //     'text' => 'sometimes|string',
+    //     'type' => 'sometimes|in:text,number,radio,checkbox,dropdown',
+    //     'order' => 'sometimes|integer',
+    //     'is_required' => 'sometimes|boolean',
+    // ];
+
+    // Pastikan bagian rules di UpdateQuestionRequest kamu seperti ini:
+    
+        $questionId = $this->route('id'); // Menangkap parameter {id} dari rute API
+
+        return [
+            'kode' => 'sometimes|string|max:50|unique:questions,kode,' . ($questionId ?? 'NULL'),
+            'text' => 'sometimes|string',
+            'type' => 'sometimes|in:text,number,radio,checkbox,dropdown',
+            'order' => 'sometimes|integer',
+            'is_required' => 'sometimes|boolean',
+        ];
     }
 }

@@ -2,8 +2,9 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Models\Answer;
 use App\Contracts\Repositories\AnswerRepositoryInterface;
+use App\Models\Answer;
+use Illuminate\Support\Facades\DB;
 
 class EloquentAnswerRepository implements AnswerRepositoryInterface
 {
@@ -42,7 +43,7 @@ class EloquentAnswerRepository implements AnswerRepositoryInterface
     public function getCountByQuestionOption(int $questionId)
     {
         return $this->model->where('question_id', $questionId)
-            ->select('question_option_id', \DB::raw('count(*) as total'))
+            ->select('question_option_id', DB::raw('count(*) as total'))
             ->with(['questionOption:id,option_text'])
             ->groupBy('question_option_id')
             ->get();

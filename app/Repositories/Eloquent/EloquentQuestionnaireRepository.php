@@ -20,9 +20,20 @@ class EloquentQuestionnaireRepository implements QuestionnaireRepositoryInterfac
         return $this->model->all();
     }
 
+    // public function find(int $id)
+    // {
+    //     return $this->model->with(['questions.children'])->findOrFail($id);
+    // }
+
     public function find(int $id)
     {
-        return $this->model->with(['questions.children'])->findOrFail($id);
+        return $this->model->with([
+            'questions' => function($query) {
+                $query->whereNull('parent_id')->orderBy('order', 'asc');
+            },
+            'questions.options', // <--- Memuat opsi untuk pertanyaan induk
+            'questions.children.options' // <--- Memuat opsi untuk sub-pertanyaan bersyarat
+        ])->findOrFail($id);
     }
 
     public function create(array $data)
