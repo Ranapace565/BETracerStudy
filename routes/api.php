@@ -86,5 +86,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Pengingat Kuesioner
         Route::post('/send-reminders', [NotificationController::class, 'broadcastReminder']);
+
+        // Ekpor Hasil Jawaban ke Excel (Admin Only)
+        Route::get('/questionnaires/{id}/export', [QuestionnaireManagementController::class, 'exportToExcel']);
     });
 });
