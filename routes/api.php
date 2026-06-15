@@ -55,6 +55,9 @@ Route::middleware('auth:sanctum')->group(function () {
          */
         Route::apiResource('users', UserController::class);
 
+        // Statistik detail list alumni (Sudah & Belum Mengisi kuesioner terbaru)
+        Route::get('/tracer-completion-summary', [QuestionnaireController::class, 'getAlumniCompletionSummary']);
+
         // Berita
         Route::post('/news', [NewsController::class, 'store']);
         Route::post('/news/{id}', [NewsController::class, 'update']);
@@ -89,5 +92,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Ekpor Hasil Jawaban ke Excel (Admin Only)
         Route::get('/questionnaires/{id}/export', [QuestionnaireManagementController::class, 'exportToExcel']);
+
     });
 });

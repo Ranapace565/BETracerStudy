@@ -64,4 +64,67 @@ class NotificationService
             return $lazyAlumni->count();
         
     }
+
+    /**
+     * Mendapatkan list dan jumlah alumni yang sudah vs belum mengisi kuesioner aktif.
+     */
+    public function getCompletionStatus()
+    {
+        // 1. Cari kuesioner yang sedang aktif terbaru
+        $activeQuestionnaire = \App\Models\Questionnaire::where('is_active', true)->first();
+        
+        if (!$activeQuestionnaire) {
+            return [
+                'questionnaire_title' => null,
+                'sudah_mengisi' => ['total' => 0, 'data' => []],
+                'belum_mengisi' => ['total' => 0, 'data' => []],
+            ];
+        }
+
+        // 2. Alumni yang SUDAH mengisi kuesioner aktif (Punya minimal 1 baris di tabel answers)
+        $sudahMengisi = \App\Models\User::where('role', 'alumni')
+            ->whereHas('alumni.answers', function ($q) use ($activeQuestionnaire) {
+                $q->where('questionnaire_id', $activeQuestionnaire->id);
+            })
+            ->with('alumni') // Load data NIM dan Tahun Lulus
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'nama' => $user->username,
+                    'nim' => $user->alumni->nim ?? '-',
+                    'tahun_lulus' => $user->alumni->tahun_lulus ?? '-',
+                ];
+            });
+
+        // 3. Alumni yang BELUM mengisi kuesioner aktif
+        $belumMengisi = \App\Models\User::where('role', 'alumni')
+            ->whereHas('alumni', function ($query) use ($activeQuestionnaire) {
+                $query->whereDoesntHave('answers', function ($q) use ($activeQuestionnaire) {
+                    $q->where('questionnaire_id', $activeQuestionnaire->id);
+                });
+            })
+            ->with('alumni')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'nama' => $user->username,
+                    'nim' => $user->alumni->nim ?? '-',
+                    'tahun_lulus' => $user->alumni->tahun_lulus ?? '-',
+                ];
+            });
+
+        return [
+            'questionnaire_title' => $activeQuestionnaire->title,
+            'sudah_mengisi' => [
+                'total' => $sudahMengisi->count(),
+                'data' => $sudahMengisi
+            ],
+            'belum_mengisi' => [
+                'total' => $belumMengisi->count(),
+                'data' => $belumMengisi
+            ]
+        ];
+    }
 }
