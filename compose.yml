@@ -1,0 +1,79 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: tracerstudy-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: betracerstudy
+      MYSQL_USER: tracer
+      MYSQL_PASSWORD: tracer123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - tracer-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: tracerstudy-phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    networks:
+      - tracer-network
+
+  backend:
+    build:
+      context: ../BETracerStudy
+    container_name: tracerstudy-backend
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ../BETracerStudy:/var/www
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: betracerstudy
+      DB_USERNAME: tracer
+      DB_PASSWORD: tracer123
+    networks:
+      - tracer-network
+
+  frontend:
+    build:
+      context: ../tracker_study_frontend
+    container_name: tracerstudy-frontend
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ../tracker_study_frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api
+    networks:
+      - tracer-network
+
+volumes:
+  mysql_data:
+
+networks:
+  tracer-network:
+    driver: bridge

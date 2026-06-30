@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Questionnaire\SubmitAnswerRequest;
 use App\Http\Resources\AnswerResource;
 use App\Http\Resources\QuestionnaireResource;
+use App\Services\NotificationService;
 use App\Services\QuestionnaireService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -75,6 +76,17 @@ class QuestionnaireController extends Controller
             'success' => true,
             'message' => 'Data statistik tracer study berhasil ditarik.',
             'data' => $statistics
+        ]);
+    }
+
+    public function getAlumniCompletionSummary(NotificationService $notificationService): \Illuminate\Http\JsonResponse
+    {
+        $summary = $notificationService->getCompletionStatus();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data ringkasan pengisian kuesioner berhasil diambil.',
+            'data' => $summary
         ]);
     }
 }

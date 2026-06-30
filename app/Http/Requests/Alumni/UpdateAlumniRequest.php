@@ -23,7 +23,7 @@ class UpdateAlumniRequest extends FormRequest
      */
     public function rules(): array
     {
-        $alumniId = Auth::user()->alumni->id;
+        $alumniId = Auth::user()->alumni?->id ?? 'NULL';
         return [
             'nim' => 'sometimes|string|unique:alumnis,nim,' . $alumniId,
             'nik' => 'sometimes|string|unique:alumnis,nik,' . $alumniId,

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Contracts\Repositories\AlumniRepositoryInterface;
 use App\Contracts\Repositories\AnswerRepositoryInterface;
 use App\Contracts\Repositories\JobVacancyRepositoryInterface;
+use App\Contracts\Repositories\NewsRepositoryInterface;
 use App\Contracts\Repositories\OptionRepositoryInterface;
 use App\Contracts\Repositories\QuestionnaireRepositoryInterface;
 use App\Contracts\Repositories\QuestionRepositoryInterface;
@@ -12,6 +13,7 @@ use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Repositories\Eloquent\EloquentAlumniRepository;
 use App\Repositories\Eloquent\EloquentAnswerRepository;
 use App\Repositories\Eloquent\EloquentJobVacancyRepository;
+use App\Repositories\Eloquent\EloquentNewsRepository;
 use App\Repositories\Eloquent\EloquentOptionRepository;
 use App\Repositories\Eloquent\EloquentQuestionnaireRepository;
 use App\Repositories\Eloquent\EloquentQuestionRepository;
@@ -32,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AnswerRepositoryInterface::class, EloquentAnswerRepository::class);
         $this->app->bind(OptionRepositoryInterface::class, EloquentOptionRepository::class);
         $this->app->bind(JobVacancyRepositoryInterface::class, EloquentJobVacancyRepository::class);
+        $this->app->bind(NewsRepositoryInterface::class, EloquentNewsRepository::class);
     }
 
     /**
